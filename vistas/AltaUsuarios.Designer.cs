@@ -1,4 +1,6 @@
-﻿namespace PacientesC.vistas
+﻿using PacientesC.bbdd;
+
+namespace PacientesC.vistas
 {
     partial class AltaUsuarios
     {
@@ -179,5 +181,24 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+
+        public void Registrar()
+        {
+            string nombre = campoNombre.Text;
+            string usuario = campoUsuario.Text;
+            string pass = Utilidades.Encriptado.Encriptar(campoPass.Text);
+
+            if (Utilidades.Validaciones.ValidaFormulario(formulario))
+            {
+                if(Conexion.CompruebaUsuario(usuario))
+                {
+
+                }
+                else
+                {
+                    MessageBox.Show("El usuario ya existe.");
+                }
+            }
+        }
     }
 }

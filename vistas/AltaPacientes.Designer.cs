@@ -1,4 +1,5 @@
-﻿using PacientesC.Utilidades;
+﻿using PacientesC.bbdd;
+using PacientesC.Utilidades;
 using System.Windows.Forms;
 
 namespace PacientesC.vistas
@@ -219,8 +220,17 @@ namespace PacientesC.vistas
             string ciudad = comboCiudad.Text;
 
             if (Validaciones.ValidaFormulario(formulario))
-
             {
+                Modelo.Paciente paciente = new Modelo.Paciente(nombre, apellidos, direccion, ciudad);
+                if (!Conexion.RegistrarPaciente(paciente))
+                {
+                    MessageBox.Show("Error al registrar el paciente");
+                    return;
+                }
+                else
+                {
+                    MessageBox.Show("Paciente registrado correctamente");
+                }
                 MessageBox.Show("Registro exitoso");
                 Validaciones.LimpiarFormulario(formulario);
             }
