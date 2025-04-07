@@ -68,6 +68,7 @@
     <Compile Include="bbdd\Conexion.cs" />
     <Compile Include="Modelo\Paciente.cs" />
     <Compile Include="Modelo\Usuario.cs" />
+    <Compile Include="Utilidades\Encriptado.cs" />
     <Compile Include="Utilidades\Validaciones.cs" />
     <Compile Include="vistas\AltaPacientes.cs">
       <SubType>Form</SubType>
