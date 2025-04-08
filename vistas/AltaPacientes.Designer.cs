@@ -214,10 +214,10 @@ namespace PacientesC.vistas
         public void Registrar()
 
         {
-            string nombre = campoNombre.Text;
-            string apellidos = campoApellidos.Text;
-            string direccion = campoDireccion.Text;
-            string ciudad = comboCiudad.Text;
+            string nombre = Encriptado.Encriptar(campoNombre.Text);
+            string apellidos = Encriptado.Encriptar(campoApellidos.Text);
+            string direccion = Encriptado.Encriptar(campoDireccion.Text);
+            string ciudad = Encriptado.Encriptar(comboCiudad.Text);
 
             if (Validaciones.ValidaFormulario(formulario))
             {

@@ -16,5 +16,10 @@ namespace PacientesC.vistas
         {
             InitializeComponent();
         }
+
+        private void botonRegistro_Click(object sender, EventArgs e)
+        {
+            Registrar();
+        }
     }
 }

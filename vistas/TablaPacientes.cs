@@ -15,6 +15,7 @@ namespace PacientesC.vistas
         public TablaPacientes()
         {
             InitializeComponent();
+            bbdd.Conexion.GetPacientes(dataGridView1);
         }
     }
 }

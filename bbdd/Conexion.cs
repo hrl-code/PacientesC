@@ -7,12 +7,13 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace PacientesC.bbdd
 {
     internal class Conexion
     {
-        private static readonly string url = "Data Source=JPexamen.db";
+        private static readonly string url = "Data Source=pacientes.db";
 
         public static bool Acceder(string user, string pass)
         {
@@ -73,12 +74,12 @@ namespace PacientesC.bbdd
 
                 SQLiteCommand comando = new SQLiteCommand(consulta, conn);
 
-            comando.Parameters.AddWithValue("@nom", p.Nombre);
-            comando.Parameters.AddWithValue("@ape", p.Apellidos);
-            comando.Parameters.AddWithValue("@dir", p.Direccion);
-            comando.Parameters.AddWithValue("@ciu", p.Ciudad);
+                comando.Parameters.AddWithValue("@nom", p.Nombre);
+                comando.Parameters.AddWithValue("@ape", p.Apellidos);
+                comando.Parameters.AddWithValue("@dir", p.Direccion);
+                comando.Parameters.AddWithValue("@ciu", p.Ciudad);
 
-            comando.ExecuteNonQuery();
+                comando.ExecuteNonQuery();
                 return true;
 
             }
@@ -95,7 +96,7 @@ namespace PacientesC.bbdd
 
         public static bool RegistrarUsuario(Usuario u)
         {
-            string consulta = "INSERT INTO Usuarios (nombre, usuario, pass) VALUES (@nom, @usu, @pass)";
+            string consulta = "INSERT INTO usuarios (nombrecompleto, usuario, pass) VALUES (@nom, @usu, @pass)";
             SQLiteConnection conn = new SQLiteConnection(url);
             conn.Open();
             try
@@ -127,22 +128,67 @@ namespace PacientesC.bbdd
             SQLiteConnection conn = new SQLiteConnection(url);
             conn.Open();
 
-            using (SQLiteCommand command = new SQLiteCommand(consultausuario, conn))
+            SQLiteCommand command = new SQLiteCommand(consultausuario, conn);
+            command.Parameters.AddWithValue("@usu", usuario);
+            SQLiteDataReader resultados = command.ExecuteReader();
+            try
             {
-                command.Parameters.AddWithValue("@usu", usuario);
-                SQLiteDataReader resultados = command.ExecuteReader();
                 if (resultados.HasRows)
                 {
-                    conn.Close();
-                    resultados.Close();
                     return true;
                 }
                 else
                 {
-                    conn.Close();
-                    resultados.Close();
                     return false;
+                }
+            }
+            catch (SQLiteException e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            finally
+            {
+                resultados.Close();
+                conn.Close();
+            }
+        }
+        public static void GetPacientes(DataGridView dataGridView)
+        {
+            string consulta = "SELECT id, nombre, apellidos, direccion, ciudad FROM pacientes";
+            SQLiteConnection conn = new SQLiteConnection(url);
 
+            try
+            {
+                conn.Open();
+                SQLiteCommand command = new SQLiteCommand(consulta, conn);
+                SQLiteDataReader resultados = command.ExecuteReader();
+
+                dataGridView.Rows.Clear();
+
+                while (resultados.Read())
+                {
+                    string id = resultados.GetString(0);
+                    string nombre = Encriptado.Desencriptar(resultados.GetString(1));
+                    string apellidos = Encriptado.Desencriptar(resultados.GetString(2));
+                    string direccion = Encriptado.Desencriptar(resultados.GetString(3));
+                    string ciudad = Encriptado.Desencriptar(resultados.GetString(4));
+
+                    dataGridView.Rows.Add(id, nombre, apellidos, direccion, ciudad);
+                }
+
+                resultados.Close();
+            }
+            catch (SQLiteException ex)
+            {
+                Console.WriteLine($"Error en GetPacientes: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                {
+                    conn.Close();
                 }
             }
         }

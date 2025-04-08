@@ -1,4 +1,9 @@
-﻿namespace PacientesC
+﻿using PacientesC.bbdd;
+using PacientesC.Utilidades;
+using PacientesC.vistas;
+using System.Windows.Forms;
+
+namespace PacientesC
 {
     partial class Login
     {
@@ -157,6 +162,28 @@
         private System.Windows.Forms.TextBox campoUsuario;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+
+        public void Entrar()
+        {
+            string miNombre = campoUsuario.Text;
+            string miPass = Encriptado.Encriptar(campoPass.Text);
+
+            if (Conexion.Acceder(miNombre, miPass))
+            {
+                Principal p = new Principal();
+                p.Show();
+                this.Hide();
+                p.FormClosed += (s, args) => this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Error al login. Inténtalo de nuevo", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                campoUsuario.Text = "";
+                campoPass.Text = "";
+            }
+        }
     }
+
 }
 

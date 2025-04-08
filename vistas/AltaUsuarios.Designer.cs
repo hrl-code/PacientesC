@@ -1,4 +1,6 @@
-﻿using PacientesC.bbdd;
+﻿using System.Windows.Forms;
+using PacientesC.bbdd;
+using PacientesC.Modelo;
 
 namespace PacientesC.vistas
 {
@@ -92,6 +94,7 @@ namespace PacientesC.vistas
             this.botonRegistro.TabIndex = 4;
             this.botonRegistro.Text = "Registrar";
             this.botonRegistro.UseVisualStyleBackColor = true;
+            this.botonRegistro.Click += new System.EventHandler(this.botonRegistro_Click);
             // 
             // campoNombre
             // 
@@ -190,14 +193,24 @@ namespace PacientesC.vistas
 
             if (Utilidades.Validaciones.ValidaFormulario(formulario))
             {
-                if(Conexion.CompruebaUsuario(usuario))
+                if (Conexion.CompruebaUsuario(usuario))
                 {
-
+                    MessageBox.Show("El usuario ya existe. Por favor, elige otro.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
                 else
                 {
-                    MessageBox.Show("El usuario ya existe.");
+                    Usuario nuevoUsuario = new Usuario(nombre, usuario, pass);
+                    if (Conexion.RegistrarUsuario(nuevoUsuario))
+                    {
+                        MessageBox.Show("Usuario registrado correctamente.");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Error al registrar el usuario. Inténtalo de nuevo.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
+            
             }
         }
     }

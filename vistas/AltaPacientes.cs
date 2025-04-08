@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using PacientesC.bbdd;
 
 namespace PacientesC.vistas
 {
@@ -15,6 +16,7 @@ namespace PacientesC.vistas
         public AltaPacientes()
         {
             InitializeComponent();
+            Conexion.CargarComboCiudades(comboCiudad);
         }
 
         private void botonRegistro_Click(object sender, EventArgs e)
