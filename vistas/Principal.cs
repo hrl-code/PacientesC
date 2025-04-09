@@ -35,5 +35,10 @@ namespace PacientesC.vistas
             TablaPacientes tablaPacientes = new TablaPacientes();
             tablaPacientes.Show();
         }
+
+        private void Principal_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Environment.Exit(0);
+        }
     }
 }

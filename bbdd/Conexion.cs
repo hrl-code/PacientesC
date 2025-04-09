@@ -153,44 +153,45 @@ namespace PacientesC.bbdd
                 conn.Close();
             }
         }
-        public static void GetPacientes(DataGridView dataGridView)
+        public static DataTable GetPacientes()
         {
+            DataTable dt = new DataTable();
+
+            dt.Columns.Add("ID");
+            dt.Columns.Add("NOMBRE");
+            dt.Columns.Add("APELLIDOS");
+            dt.Columns.Add("DIRECCION");
+            dt.Columns.Add("CIUDAD");
+
+            DataRow dr = dt.NewRow();
+
             string consulta = "SELECT id, nombre, apellidos, direccion, ciudad FROM pacientes";
+
             SQLiteConnection conn = new SQLiteConnection(url);
+            conn.Open();
 
-            try
+            SQLiteCommand command = new SQLiteCommand(consulta, conn);
+
+            SQLiteDataReader resultados = command.ExecuteReader();
+
+            while (resultados.Read())
             {
-                conn.Open();
-                SQLiteCommand command = new SQLiteCommand(consulta, conn);
-                SQLiteDataReader resultados = command.ExecuteReader();
+                dr = dt.NewRow();
+                dr["ID"] = resultados.GetInt32(0);
+                dr["NOMBRE"] = Encriptado.Desencriptar(resultados.GetString(1));
+                dr["APELLIDOS"] = Encriptado.Desencriptar(resultados.GetString(2));
+                dr["DIRECCION"] = Encriptado.Desencriptar(resultados.GetString(3));
+                dr["CIUDAD"] = Encriptado.Desencriptar(resultados.GetString(4));
 
-                dataGridView.Rows.Clear();
+                dt.Rows.Add(dr);
 
-                while (resultados.Read())
-                {
-                    string id = resultados.GetString(0);
-                    string nombre = Encriptado.Desencriptar(resultados.GetString(1));
-                    string apellidos = Encriptado.Desencriptar(resultados.GetString(2));
-                    string direccion = Encriptado.Desencriptar(resultados.GetString(3));
-                    string ciudad = Encriptado.Desencriptar(resultados.GetString(4));
-
-                    dataGridView.Rows.Add(id, nombre, apellidos, direccion, ciudad);
-                }
-
-                resultados.Close();
             }
-            catch (SQLiteException ex)
-            {
-                Console.WriteLine($"Error en GetPacientes: {ex.Message}");
-                System.Diagnostics.Debug.WriteLine(ex.Message);
-            }
-            finally
-            {
-                if (conn.State == ConnectionState.Open)
-                {
-                    conn.Close();
-                }
-            }
+
+            resultados.Close();
+            conn.Close();
+            return dt;
         }
+
     }
+
 }

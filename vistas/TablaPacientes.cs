@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using PacientesC.bbdd;
 
 namespace PacientesC.vistas
 {
@@ -15,7 +16,7 @@ namespace PacientesC.vistas
         public TablaPacientes()
         {
             InitializeComponent();
-            bbdd.Conexion.GetPacientes(dataGridView1);
+            dataGridView1.DataSource = Conexion.GetPacientes();
         }
     }
 }
